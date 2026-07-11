@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiverScope AI — Data Pasien</title>
+  <meta name="description" content="Kelola data pasien untuk deteksi histopatologi liver.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css?v=5">
+</head>
+<body>
+
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <div class="app-wrapper">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">🔬</span>
+        <h2>LiverScope AI</h2>
+        <div class="brand-sub">Hybrid Detection System</div>
+      </div>
+
+      <div class="sidebar-user" id="sidebar-user">
+        <div class="user-avatar" id="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Admin</div>
+          <div class="user-role" id="user-role">Administrator</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">📌 Menu Admin</div>
+        <a href="/admin/patients" class="nav-link active">
+          <span class="nav-icon">👥</span> Data Pasien
+        </a>
+        <a href="/admin/detect" class="nav-link">
+          <span class="nav-icon">🔍</span> Deteksi Baru
+        </a>
+        <a href="/admin/history" class="nav-link">
+          <span class="nav-icon">📚</span> Riwayat Analisis
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">⚙️ Akun</div>
+        <a href="/logout" class="nav-link logout-link">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </div>
+
+      <div class="sidebar-footer">© 2026 LiverScope AI v2.0</div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+      <div class="hero-header">
+        <h1><span class="hero-icon">👥</span>Data Pasien</h1>
+        <p class="hero-subtitle">Kelola data pasien untuk analisis histopatologi liver</p>
+        <div class="hero-badge">Total: <span id="patient-count">...</span> pasien</div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="patients-toolbar">
+        <input type="text" class="search-input" id="search-input" placeholder="Cari pasien..." oninput="filterPatients()">
+        <button class="btn btn-primary" onclick="showAddModal()">➕ Tambah Pasien</button>
+      </div>
+
+      <!-- Patient List -->
+      <div id="patients-list">
+        <div class="patient-card" style="opacity: 0.4;">
+          <div class="patient-info">
+            <div style="height: 16px; width: 180px; background: var(--border-subtle); border-radius: 4px; margin-bottom: 0.4rem;"></div>
+            <div style="height: 12px; width: 250px; background: var(--border-subtle); border-radius: 4px;"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== ADD/EDIT MODAL ==================== -->
+  <div class="modal-backdrop" id="patient-modal">
+    <div class="modal" style="max-width: 560px;">
+      <div class="modal-header">
+        <h3 id="modal-title">➕ Tambah Pasien Baru</h3>
+        <button class="modal-close" onclick="closePatientModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="patient-form" onsubmit="savePatient(event)">
+          <input type="hidden" id="patient-id" value="">
+          <div class="form-group" id="fg-nama">
+            <label for="p-nama">Nama Lengkap <span style="color: var(--error);">*</span></label>
+            <input type="text" id="p-nama" required placeholder="Masukkan nama lengkap pasien">
+            <div class="form-error-msg" id="err-nama">⚠️ <span>Nama tidak boleh mengandung angka.</span></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group" id="fg-nik">
+              <label for="p-nik">NIK / No. Rekam Medis</label>
+              <input type="text" id="p-nik" placeholder="Masukkan NIK (16 digit)" maxlength="16" inputmode="numeric">
+              <div class="form-hint">Harus 16 digit angka</div>
+              <div class="form-error-msg" id="err-nik">⚠️ <span>NIK harus tepat 16 digit angka.</span></div>
+            </div>
+            <div class="form-group" id="fg-telepon">
+              <label for="p-telepon">No. Telepon</label>
+              <input type="text" id="p-telepon" placeholder="08xxxxxxxxx" maxlength="13" inputmode="numeric">
+              <div class="form-hint">Maks. 13 karakter</div>
+              <div class="form-error-msg" id="err-telepon">⚠️ <span>No. telepon maks. 13 karakter angka.</span></div>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="p-tanggal-lahir">Tanggal Lahir</label>
+              <input type="date" id="p-tanggal-lahir" max="2026-07-01">
+            </div>
+            <div class="form-group">
+              <label for="p-jenis-kelamin">Jenis Kelamin</label>
+              <select id="p-jenis-kelamin">
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="p-alamat">Alamat</label>
+            <textarea id="p-alamat" rows="2" placeholder="Masukkan alamat lengkap"></textarea>
+          </div>
+          <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem;">
+            <button type="button" class="btn btn-outline" onclick="closePatientModal()">Batal</button>
+            <button type="submit" class="btn btn-primary" id="save-patient-btn">💾 Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DELETE CONFIRMATION ==================== -->
+  <div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+      <h4>🗑️ Hapus Pasien?</h4>
+      <p>Apakah Anda yakin ingin menghapus data pasien "<span id="delete-patient-name"></span>"? Tindakan ini tidak dapat dibatalkan.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-outline btn-sm" onclick="cancelDeletePatient()">Batal</button>
+        <button class="btn btn-danger btn-sm" onclick="executeDeletePatient()">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js?v=5"></script>
+</body>
+</html>

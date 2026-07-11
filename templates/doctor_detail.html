@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiverScope AI — Detail Hasil Analisis</title>
+  <meta name="description" content="Detail hasil analisis deteksi histopatologi liver dan form diagnosa dokter.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css?v=5">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <div class="app-wrapper">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">🔬</span>
+        <h2>LiverScope AI</h2>
+        <div class="brand-sub">Hybrid Detection System</div>
+      </div>
+
+      <div class="sidebar-user" id="sidebar-user">
+        <div class="user-avatar" id="user-avatar" style="background: linear-gradient(135deg, #059669, #0891b2);">D</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Dokter</div>
+          <div class="user-role" id="user-role">Dokter</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">📌 Menu Dokter</div>
+        <a href="/doctor/dashboard" class="nav-link active">
+          <span class="nav-icon">📋</span> Hasil Analisis
+        </a>
+      </div>
+
+      <!-- Pipeline -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">🔗 Pipeline Model</div>
+        <div class="pipeline-step">
+          <span class="step-icon">🔍</span>
+          <div><div class="step-name">YOLOv11</div><div class="step-desc">Object Detection</div></div>
+        </div>
+        <div class="pipeline-arrow">↓</div>
+        <div class="pipeline-step">
+          <span class="step-icon">🧠</span>
+          <div><div class="step-name">ResNet50</div><div class="step-desc">Feature Extraction (2048-dim)</div></div>
+        </div>
+        <div class="pipeline-arrow">↓</div>
+        <div class="pipeline-step">
+          <span class="step-icon">📊</span>
+          <div><div class="step-name">XGBoost</div><div class="step-desc">Final Classification</div></div>
+        </div>
+      </div>
+
+      <!-- Class Legend -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">🏷️ Kelas Deteksi</div>
+        <div class="class-legend-item"><span class="class-dot" style="background: var(--color-ballooning)"></span> Ballooning</div>
+        <div class="class-legend-item"><span class="class-dot" style="background: var(--color-fibrosis)"></span> Fibrosis</div>
+        <div class="class-legend-item"><span class="class-dot" style="background: var(--color-inflammation)"></span> Inflammation</div>
+        <div class="class-legend-item"><span class="class-dot" style="background: var(--color-steatosis)"></span> Steatosis</div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">⚙️ Akun</div>
+        <a href="/logout" class="nav-link logout-link">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </div>
+
+      <div class="sidebar-footer">© 2026 LiverScope AI v2.0</div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+      <!-- Back button -->
+      <div style="margin-bottom: 1rem;">
+        <a href="/doctor/dashboard" class="btn btn-outline btn-sm">← Kembali ke Dashboard</a>
+      </div>
+
+      <div id="detail-content">
+        <!-- Loading -->
+        <div style="text-align: center; padding: 3rem;">
+          <div class="loading-spinner" style="margin: 0 auto;"></div>
+          <p class="loading-text" style="margin-top: 1rem;">Memuat detail analisis...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Get analysis ID from URL
+    const ANALYSIS_ID = window.location.pathname.split('/').pop();
+  </script>
+  <script src="/static/js/app.js?v=5"></script>
+</body>
+</html>

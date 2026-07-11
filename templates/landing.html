@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiverScope AI — Sistem Deteksi Histopatologi Liver Berbasis AI</title>
+  <meta name="description" content="LiverScope AI menggunakan pipeline hybrid YOLOv11, ResNet50, dan XGBoost untuk mendeteksi kelainan histopatologi liver secara otomatis.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css?v=6">
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="landing-nav">
+    <div class="landing-nav-inner">
+      <a href="/" class="landing-logo">
+        <span>🔬</span> LiverScope AI
+      </a>
+      <div class="landing-nav-links">
+        <a href="#about">Tentang</a>
+        <a href="#conditions">Kelainan Liver</a>
+        <a href="#histopatologi">Histopatologi</a>
+        <a href="#teknologi">Teknologi AI</a>
+        <a href="/login" class="btn btn-primary btn-sm">🔐 Masuk</a>
+      </div>
+      <button class="landing-menu-btn" onclick="toggleLandingMenu()">☰</button>
+    </div>
+    <!-- Mobile menu -->
+    <div class="landing-mobile-menu" id="landing-mobile-menu">
+      <a href="#about">Tentang</a>
+      <a href="#conditions">Kelainan Liver</a>
+      <a href="#histopatologi">Histopatologi</a>
+      <a href="#teknologi">Teknologi AI</a>
+      <a href="/login" class="btn btn-primary btn-sm" style="margin-top: 0.5rem;">🔐 Masuk</a>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="landing-hero">
+    <div class="landing-hero-content">
+      <div class="landing-hero-text">
+        <div class="landing-hero-badge">🧬 Powered by YOLOv11 • ResNet50 • XGBoost</div>
+        <h1>Deteksi Kelainan<br><span class="text-gradient">Histopatologi Liver</span><br>dengan Kecerdasan Buatan</h1>
+        <p>LiverScope AI menganalisis citra histopatologi liver secara otomatis menggunakan pipeline hybrid deep learning untuk mendeteksi 4 jenis kelainan: Ballooning, Fibrosis, Inflammation, dan Steatosis.</p>
+        <div class="landing-hero-actions">
+          <a href="/login" class="btn btn-primary">🔐 Masuk ke Sistem</a>
+          <a href="#about" class="btn btn-outline">📖 Pelajari Lebih Lanjut</a>
+        </div>
+        <div class="landing-hero-stats">
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">4</div>
+            <div class="hero-stat-label">Kelas Deteksi</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">3</div>
+            <div class="hero-stat-label">Model AI</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">2048</div>
+            <div class="hero-stat-label">Fitur Ekstraksi</div>
+          </div>
+        </div>
+      </div>
+      <div class="landing-hero-image">
+        <img src="/static/images/liver_conditions.png" alt="Ilustrasi kelainan liver">
+      </div>
+    </div>
+    <div class="landing-hero-wave">
+      <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 60L48 52C96 44 192 28 288 24C384 20 480 28 576 40C672 52 768 68 864 72C960 76 1056 68 1152 56C1248 44 1344 28 1392 20L1440 12V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0V60Z" fill="#f0f4f8"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT SECTION ==================== -->
+  <section class="landing-section" id="about">
+    <div class="landing-container">
+      <div class="landing-section-header">
+        <div class="landing-section-badge">📋 Tentang Sistem</div>
+        <h2>Apa itu LiverScope AI?</h2>
+        <p>Sistem pendukung keputusan berbasis kecerdasan buatan untuk membantu analisis citra histopatologi liver secara otomatis dan akurat.</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-icon">🎯</div>
+          <h3>Deteksi Otomatis</h3>
+          <p>Mendeteksi region of interest pada citra histopatologi liver secara otomatis menggunakan model YOLOv11 yang telah dilatih khusus.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">🧠</div>
+          <h3>Klasifikasi Akurat</h3>
+          <p>Mengklasifikasikan setiap region ke dalam 4 kategori kelainan menggunakan fitur yang diekstrak oleh ResNet50 dan diklasifikasikan oleh XGBoost.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">👨‍⚕️</div>
+          <h3>Mendukung Dokter</h3>
+          <p>Memberikan hasil analisis yang detail untuk membantu dokter dalam membuat diagnosa dan menentukan tindakan yang tepat.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">📊</div>
+          <h3>Visualisasi Lengkap</h3>
+          <p>Menyajikan hasil deteksi dengan bounding box, distribusi kelas, region terdeteksi, dan metrik performa secara visual dan interaktif.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONDITIONS SECTION ==================== -->
+  <section class="landing-section landing-section-alt" id="conditions">
+    <div class="landing-container">
+      <div class="landing-section-header">
+        <div class="landing-section-badge">🏥 Kelainan Liver</div>
+        <h2>4 Jenis Kelainan yang Dideteksi</h2>
+        <p>LiverScope AI mampu mendeteksi empat jenis kelainan histopatologi liver yang umum ditemukan dalam pemeriksaan mikroskopis.</p>
+      </div>
+
+      <div class="conditions-grid">
+        <!-- Steatosis -->
+        <div class="condition-card">
+          <div class="condition-header" style="border-left: 4px solid var(--color-steatosis);">
+            <div class="condition-icon" style="background: rgba(22, 163, 106, 0.1); color: var(--color-steatosis);">💧</div>
+            <div>
+              <h3>Steatosis</h3>
+              <span class="condition-aka">Perlemakan Hati</span>
+            </div>
+          </div>
+          <div class="condition-body">
+            <p>Penumpukan lemak berlebih dalam sel hepatosit (sel hati). Pada citra histopatologi, tampak sebagai <strong>vakuola bulat jernih</strong> di dalam sel yang mendorong inti sel ke tepi.</p>
+            <div class="condition-facts">
+              <div class="fact-item">
+                <span class="fact-icon">📊</span>
+                <span>Stadium awal penyakit hati berlemak (NAFLD)</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">✅</span>
+                <span>Umumnya <strong>reversibel</strong> jika ditangani dini</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">⚠️</span>
+                <span>Dapat berkembang menjadi steatohepatitis (NASH)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ballooning -->
+        <div class="condition-card">
+          <div class="condition-header" style="border-left: 4px solid var(--color-ballooning);">
+            <div class="condition-icon" style="background: rgba(234, 88, 12, 0.1); color: var(--color-ballooning);">🎈</div>
+            <div>
+              <h3>Ballooning</h3>
+              <span class="condition-aka">Degenerasi Balon</span>
+            </div>
+          </div>
+          <div class="condition-body">
+            <p>Pembengkakan hepatosit akibat kerusakan sitoskeleton sel. Sel tampak <strong>membesar dan membulat</strong> dengan sitoplasma yang jernih dan pucat pada pewarnaan H&E.</p>
+            <div class="condition-facts">
+              <div class="fact-item">
+                <span class="fact-icon">🔬</span>
+                <span>Indikator penting NASH (Non-Alcoholic Steatohepatitis)</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">⚕️</span>
+                <span>Menandakan <strong>kerusakan sel aktif</strong></span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">📈</span>
+                <span>Komponen penting dalam NAS score (NAFLD Activity Score)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inflammation -->
+        <div class="condition-card">
+          <div class="condition-header" style="border-left: 4px solid var(--color-inflammation);">
+            <div class="condition-icon" style="background: rgba(220, 38, 38, 0.1); color: var(--color-inflammation);">🔥</div>
+            <div>
+              <h3>Inflammation</h3>
+              <span class="condition-aka">Peradangan</span>
+            </div>
+          </div>
+          <div class="condition-body">
+            <p>Infiltrasi sel-sel radang (limfosit, neutrofil) ke dalam jaringan hati. Pada citra histopatologi tampak sebagai <strong>kumpulan sel-sel kecil berwarna gelap</strong> di antara hepatosit.</p>
+            <div class="condition-facts">
+              <div class="fact-item">
+                <span class="fact-icon">🦠</span>
+                <span>Dapat disebabkan infeksi virus, alkohol, atau autoimun</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">⚠️</span>
+                <span>Peradangan kronis → risiko <strong>fibrosis</strong></span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">💊</span>
+                <span>Memerlukan penanganan sesuai etiologi penyebab</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fibrosis -->
+        <div class="condition-card">
+          <div class="condition-header" style="border-left: 4px solid var(--color-fibrosis);">
+            <div class="condition-icon" style="background: rgba(124, 58, 237, 0.1); color: var(--color-fibrosis);">🕸️</div>
+            <div>
+              <h3>Fibrosis</h3>
+              <span class="condition-aka">Jaringan Parut</span>
+            </div>
+          </div>
+          <div class="condition-body">
+            <p>Pembentukan jaringan ikat (kolagen) berlebih menggantikan sel hati yang rusak. Tampak sebagai <strong>pita-pita berwarna biru</strong> pada pewarnaan trichrome, atau area eosinofilik pada H&E.</p>
+            <div class="condition-facts">
+              <div class="fact-item">
+                <span class="fact-icon">📊</span>
+                <span>Diklasifikasikan F0–F4 (Metavir scoring)</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">🚨</span>
+                <span>Stadium lanjut → <strong>Sirosis</strong> (F4)</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">⏰</span>
+                <span>Deteksi dini sangat penting untuk pencegahan sirosis</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== HISTOPATOLOGI SECTION ==================== -->
+  <section class="landing-section" id="histopatologi">
+    <div class="landing-container">
+      <div class="landing-section-header">
+        <div class="landing-section-badge">🔬 Histopatologi</div>
+        <h2>Pemeriksaan Histopatologi Liver</h2>
+        <p>Histopatologi adalah pemeriksaan jaringan tubuh secara mikroskopis untuk mendiagnosis penyakit. Biopsi hati merupakan gold standard dalam evaluasi penyakit liver.</p>
+      </div>
+
+      <div class="histo-content">
+        <div class="histo-image-panel">
+          <img src="/static/images/histopathology_sample.png" alt="Contoh citra histopatologi liver" class="histo-main-image">
+          <p class="histo-image-caption">Contoh citra histopatologi liver dengan pewarnaan H&E pada perbesaran mikroskopis</p>
+        </div>
+        <div class="histo-info-panel">
+          <div class="histo-info-card">
+            <h4>🧪 Pewarnaan H&E</h4>
+            <p>Hematoxylin & Eosin (H&E) adalah pewarnaan standar yang memberikan warna <strong>ungu/biru untuk inti sel</strong> dan <strong>merah muda untuk sitoplasma</strong>. Ini memungkinkan visualisasi struktur seluler secara detail.</p>
+          </div>
+          <div class="histo-info-card">
+            <h4>🔍 Proses Biopsi</h4>
+            <p>Sampel jaringan hati diambil melalui biopsi perkutan, dipotong tipis (4-5 μm), diwarnai, lalu diperiksa di bawah mikroskop oleh ahli patologi anatomi.</p>
+          </div>
+          <div class="histo-info-card">
+            <h4>📋 Parameter yang Dinilai</h4>
+            <p>Meliputi derajat steatosis, aktivitas nekroinflamasi (NAS score), stadium fibrosis (Metavir/Ishak), dan ada tidaknya ballooning degeneration.</p>
+          </div>
+          <div class="histo-info-card">
+            <h4>🤖 Peran AI</h4>
+            <p>AI membantu mempercepat dan menstandardisasi analisis, mengurangi variabilitas inter-observer, dan memberikan hasil yang konsisten dan objektif.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TEKNOLOGI AI SECTION ==================== -->
+  <section class="landing-section landing-section-alt" id="teknologi">
+    <div class="landing-container">
+      <div class="landing-section-header">
+        <div class="landing-section-badge">🧠 Teknologi AI</div>
+        <h2>Pipeline Hybrid Detection</h2>
+        <p>LiverScope AI menggunakan pendekatan 3 tahap untuk memaksimalkan akurasi deteksi dan klasifikasi kelainan histopatologi liver.</p>
+      </div>
+
+      <div class="pipeline-showcase">
+        <div class="pipeline-showcase-image">
+          <img src="/static/images/ai_pipeline.png" alt="Visualisasi pipeline AI">
+        </div>
+      </div>
+
+      <div class="pipeline-stages">
+        <!-- Stage 1 -->
+        <div class="stage-card">
+          <div class="stage-number">1</div>
+          <div class="stage-content">
+            <div class="stage-model">YOLOv11</div>
+            <h3>Object Detection</h3>
+            <p>Model YOLOv11 mendeteksi seluruh <strong>Region of Interest (ROI)</strong> pada citra histopatologi. Menghasilkan bounding box di sekeliling area yang dicurigai sebagai kelainan.</p>
+            <div class="stage-specs">
+              <span>📦 Bounding Box</span>
+              <span>⚡ Real-time</span>
+              <span>🎯 Multi-class</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-arrow">→</div>
+
+        <!-- Stage 2 -->
+        <div class="stage-card">
+          <div class="stage-number">2</div>
+          <div class="stage-content">
+            <div class="stage-model">ResNet50</div>
+            <h3>Feature Extraction</h3>
+            <p>Setiap ROI yang terdeteksi di-crop dan diproses oleh ResNet50 (pretrained ImageNet). Mengekstrak <strong>2.048 fitur visual</strong> tingkat tinggi yang merepresentasikan karakteristik histopatologis.</p>
+            <div class="stage-specs">
+              <span>🧬 2048 Features</span>
+              <span>🏗️ Transfer Learning</span>
+              <span>📐 224×224 px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-arrow">→</div>
+
+        <!-- Stage 3 -->
+        <div class="stage-card">
+          <div class="stage-number">3</div>
+          <div class="stage-content">
+            <div class="stage-model">XGBoost</div>
+            <h3>Final Classification</h3>
+            <p>Fitur yang diekstrak diklasifikasikan oleh model XGBoost ke dalam salah satu dari <strong>4 kelas kelainan</strong>: Ballooning, Fibrosis, Inflammation, atau Steatosis.</p>
+            <div class="stage-specs">
+              <span>🏷️ 4 Kelas</span>
+              <span>📊 Probabilitas</span>
+              <span>✅ Gradient Boosting</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detection Result Example -->
+      <div class="detection-showcase">
+        <h3>Contoh Hasil Deteksi</h3>
+        <div class="detection-showcase-content">
+          <div class="detection-image-wrap">
+            <img src="/static/images/detection_example.png" alt="Contoh hasil deteksi objek pada histopatologi liver">
+          </div>
+          <div class="detection-info">
+            <p>Hasil deteksi menampilkan bounding box berwarna pada setiap region yang teridentifikasi:</p>
+            <div class="detection-legend">
+              <div class="detection-legend-item">
+                <span class="legend-color" style="background: var(--color-ballooning);"></span>
+                <strong>Ballooning</strong> — Degenerasi balon hepatosit
+              </div>
+              <div class="detection-legend-item">
+                <span class="legend-color" style="background: var(--color-fibrosis);"></span>
+                <strong>Fibrosis</strong> — Jaringan parut/fibrosa
+              </div>
+              <div class="detection-legend-item">
+                <span class="legend-color" style="background: var(--color-inflammation);"></span>
+                <strong>Inflammation</strong> — Infiltrasi sel radang
+              </div>
+              <div class="detection-legend-item">
+                <span class="legend-color" style="background: var(--color-steatosis);"></span>
+                <strong>Steatosis</strong> — Vakuola lemak
+              </div>
+            </div>
+            <p class="detection-note">Setiap deteksi disertai skor confidence dari YOLO dan XGBoost, serta status agreement antara kedua model.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA SECTION ==================== -->
+  <section class="landing-cta">
+    <div class="landing-container">
+      <div class="cta-content">
+        <h2>Mulai Analisis Histopatologi Liver</h2>
+        <p>Masuk ke sistem sebagai Admin untuk melakukan deteksi, atau sebagai Dokter untuk memberikan diagnosa.</p>
+        <a href="/login" class="btn btn-primary" style="padding: 0.85rem 2rem; font-size: 1rem;">🔐 Masuk ke LiverScope AI</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="landing-footer">
+    <div class="landing-container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span>🔬</span> LiverScope AI
+        </div>
+        <p>Sistem Deteksi Histopatologi Liver Berbasis Hybrid AI</p>
+        <p class="footer-copy">© 2026 LiverScope AI v2.0 — Pipeline: YOLOv11 • ResNet50 • XGBoost</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleLandingMenu() {
+      const menu = document.getElementById('landing-mobile-menu');
+      if (menu) menu.classList.toggle('active');
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Close mobile menu
+          const menu = document.getElementById('landing-mobile-menu');
+          if (menu) menu.classList.remove('active');
+        }
+      });
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.landing-nav');
+      if (nav) {
+        nav.classList.toggle('scrolled', window.scrollY > 40);
+      }
+    });
+
+    // Intersection observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.condition-card, .about-card, .stage-card, .histo-info-card').forEach(el => {
+      el.classList.add('scroll-animate');
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

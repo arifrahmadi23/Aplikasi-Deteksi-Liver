@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiverScope AI — Riwayat Analisis</title>
+  <meta name="description" content="Riwayat analisis deteksi histopatologi liver yang telah disimpan ke database.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css?v=5">
+</head>
+<body>
+
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <div class="app-wrapper">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">🔬</span>
+        <h2>LiverScope AI</h2>
+        <div class="brand-sub">Hybrid Detection System</div>
+      </div>
+
+      <div class="sidebar-user" id="sidebar-user">
+        <div class="user-avatar" id="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Admin</div>
+          <div class="user-role" id="user-role">Administrator</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">📌 Menu Admin</div>
+        <a href="/admin/patients" class="nav-link">
+          <span class="nav-icon">👥</span> Data Pasien
+        </a>
+        <a href="/admin/detect" class="nav-link">
+          <span class="nav-icon">🔍</span> Deteksi Baru
+        </a>
+        <a href="/admin/history" class="nav-link active">
+          <span class="nav-icon">📚</span> Riwayat Analisis
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">⚙️ Akun</div>
+        <a href="/logout" class="nav-link logout-link">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </div>
+
+      <div class="sidebar-footer">© 2026 LiverScope AI v2.0</div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+      <div class="hero-header">
+        <h1><span class="hero-icon">📚</span>Riwayat Analisis</h1>
+        <p class="hero-subtitle">Lihat semua hasil deteksi yang telah disimpan ke database</p>
+        <div class="hero-badge">Total: <span id="history-count">...</span> analisis</div>
+      </div>
+
+      <!-- History List -->
+      <div id="history-list">
+        <div class="history-card" style="opacity: 0.4;">
+          <div style="height: 16px; width: 200px; background: var(--border-subtle); border-radius: 4px; margin-bottom: 0.4rem;"></div>
+          <div style="height: 12px; width: 300px; background: var(--border-subtle); border-radius: 4px; margin-bottom: 0.6rem;"></div>
+          <div style="height: 12px; width: 250px; background: var(--border-subtle); border-radius: 4px;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== DETAIL MODAL ==================== -->
+  <div class="modal-backdrop" id="detail-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>🔎 Detail Analisis</h3>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ==================== DELETE CONFIRMATION ==================== -->
+  <div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+      <h4>🗑️ Hapus Analisis?</h4>
+      <p>Apakah Anda yakin ingin menghapus analisis "<span id="delete-filename"></span>"? Tindakan ini tidak dapat dibatalkan.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-outline btn-sm" onclick="cancelDelete()">Batal</button>
+        <button class="btn btn-danger btn-sm" onclick="executeDelete()">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js?v=5"></script>
+</body>
+</html>

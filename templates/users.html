@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiverScope AI — Kelola Akun</title>
+  <meta name="description" content="Kelola akun admin dan dokter sistem LiverScope AI.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css?v=6">
+</head>
+<body>
+
+  <!-- ==================== TOP NAVIGATION BAR ==================== -->
+  <nav class="super-navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <span class="brand-icon">🔬</span>
+        <div class="brand-text-group">
+          <h2>LiverScope AI</h2>
+          <div class="brand-sub">Super Admin Portal</div>
+        </div>
+      </div>
+      
+      <div class="navbar-menu">
+        <div class="navbar-user">
+          <div class="user-avatar" id="user-avatar">S</div>
+          <div class="user-info">
+            <span class="user-name" id="user-name">Super Admin</span>
+            <span class="user-role-badge">Super Administrator</span>
+          </div>
+        </div>
+        <a href="/logout" class="btn btn-outline btn-sm logout-btn">
+          <span>🚪</span> Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="app-wrapper super-admin-layout">
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+      <div class="hero-header">
+        <h1><span class="hero-icon">🛡️</span>Kelola Akun</h1>
+        <p class="hero-subtitle">Manajemen akun admin dan dokter sistem LiverScope AI</p>
+        <div class="hero-badge">Total: <span id="user-count">...</span> akun</div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="patients-toolbar">
+        <input type="text" class="search-input" id="search-user-input" placeholder="Cari akun..." oninput="filterUsers()">
+        <button class="btn btn-primary" onclick="showAddUserModal()">➕ Tambah Akun</button>
+      </div>
+
+      <!-- User List -->
+      <div id="users-list">
+        <div class="patient-card" style="opacity: 0.4;">
+          <div class="patient-info">
+            <div style="height: 16px; width: 180px; background: var(--border-subtle); border-radius: 4px; margin-bottom: 0.4rem;"></div>
+            <div style="height: 12px; width: 250px; background: var(--border-subtle); border-radius: 4px;"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== ADD/EDIT USER MODAL ==================== -->
+  <div class="modal-backdrop" id="user-modal">
+    <div class="modal" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 id="user-modal-title">➕ Tambah Akun Baru</h3>
+        <button class="modal-close" onclick="closeUserModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="user-form" onsubmit="saveUser(event)">
+          <input type="hidden" id="u-id" value="">
+          <div class="form-group">
+            <label for="u-nama">Nama Lengkap <span style="color: var(--error);">*</span></label>
+            <input type="text" id="u-nama" required placeholder="Masukkan nama lengkap">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="u-username">Username <span style="color: var(--error);">*</span></label>
+              <input type="text" id="u-username" required placeholder="Masukkan username">
+            </div>
+            <div class="form-group">
+              <label for="u-role">Role <span style="color: var(--error);">*</span></label>
+              <select id="u-role" required>
+                <option value="admin">Admin</option>
+                <option value="dokter">Dokter</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="u-password">Password <span id="pw-required-star" style="color: var(--error);">*</span></label>
+            <input type="password" id="u-password" placeholder="Masukkan password (min. 8 karakter)">
+            <div class="form-hint" id="pw-hint">Minimal 8 karakter</div>
+          </div>
+          <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem;">
+            <button type="button" class="btn btn-outline" onclick="closeUserModal()">Batal</button>
+            <button type="submit" class="btn btn-primary" id="save-user-btn">💾 Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DELETE CONFIRMATION ==================== -->
+  <div class="confirm-overlay" id="confirm-user-overlay">
+    <div class="confirm-box">
+      <h4>🗑️ Hapus Akun?</h4>
+      <p>Apakah Anda yakin ingin menghapus akun "<span id="delete-user-name"></span>"? Tindakan ini tidak dapat dibatalkan.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-outline btn-sm" onclick="cancelDeleteUser()">Batal</button>
+        <button class="btn btn-danger btn-sm" onclick="executeDeleteUser()">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js?v=6"></script>
+</body>
+</html>

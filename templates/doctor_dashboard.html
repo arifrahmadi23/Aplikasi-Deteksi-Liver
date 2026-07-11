@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiverScope AI — Dashboard Dokter</title>
+  <meta name="description" content="Dashboard dokter untuk melihat hasil deteksi dan memberikan diagnosa.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css?v=5">
+</head>
+<body>
+
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <div class="app-wrapper">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">🔬</span>
+        <h2>LiverScope AI</h2>
+        <div class="brand-sub">Hybrid Detection System</div>
+      </div>
+
+      <div class="sidebar-user" id="sidebar-user">
+        <div class="user-avatar" id="user-avatar" style="background: linear-gradient(135deg, #059669, #0891b2);">D</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Dokter</div>
+          <div class="user-role" id="user-role">Dokter</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">📌 Menu Dokter</div>
+        <a href="/doctor/dashboard" class="nav-link active">
+          <span class="nav-icon">📋</span> Hasil Analisis
+        </a>
+      </div>
+
+      <!-- Class Legend -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">🏷️ Kelas Deteksi</div>
+        <div class="class-legend-item"><span class="class-dot" style="background: var(--color-ballooning)"></span> Ballooning</div>
+        <div class="class-legend-item"><span class="class-dot" style="background: var(--color-fibrosis)"></span> Fibrosis</div>
+        <div class="class-legend-item"><span class="class-dot" style="background: var(--color-inflammation)"></span> Inflammation</div>
+        <div class="class-legend-item"><span class="class-dot" style="background: var(--color-steatosis)"></span> Steatosis</div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">⚙️ Akun</div>
+        <a href="/logout" class="nav-link logout-link">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </div>
+
+      <div class="sidebar-footer">© 2026 LiverScope AI v2.0</div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+      <div class="hero-header" style="background: linear-gradient(135deg, #065f46 0%, #059669 40%, #0891b2 100%);">
+        <h1><span class="hero-icon">🩺</span>Dashboard Dokter</h1>
+        <p class="hero-subtitle">Lihat hasil analisis deteksi dan berikan diagnosa serta tindakan</p>
+        <div class="hero-badge">Total: <span id="total-count">...</span> analisis</div>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="status-filter">
+        <button class="status-filter-btn active" data-filter="all" onclick="filterByStatus('all', this)">📋 Semua</button>
+        <button class="status-filter-btn" data-filter="waiting" onclick="filterByStatus('waiting', this)">⏳ Menunggu Diagnosa</button>
+        <button class="status-filter-btn" data-filter="done" onclick="filterByStatus('done', this)">✅ Sudah Didiagnosa</button>
+      </div>
+
+      <!-- Results List -->
+      <div id="doctor-list">
+        <div class="doctor-card" style="opacity: 0.4; cursor: default;">
+          <div class="card-header">
+            <div style="height: 16px; width: 200px; background: var(--border-subtle); border-radius: 4px;"></div>
+            <div style="height: 12px; width: 80px; background: var(--border-subtle); border-radius: 4px;"></div>
+          </div>
+          <div style="height: 12px; width: 300px; background: var(--border-subtle); border-radius: 4px; margin-top: 0.5rem;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js?v=5"></script>
+</body>
+</html>

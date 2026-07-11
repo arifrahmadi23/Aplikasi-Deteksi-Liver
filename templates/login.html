@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiverScope AI — Login</title>
+  <meta name="description" content="Login ke sistem deteksi histopatologi liver LiverScope AI.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-brand">
+          <span class="brand-icon">🔬</span>
+          <h1>LiverScope AI</h1>
+          <div class="brand-sub">Sistem Deteksi Histopatologi Liver</div>
+        </div>
+
+        <div class="login-error" id="login-error"></div>
+
+        <form class="login-form" id="login-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Masukkan username" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Masukkan password" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+            🔐 Masuk
+          </button>
+        </form>
+
+        <div class="login-footer">
+          © 2026 LiverScope AI v2.0 — Hybrid Detection System
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+      const errorEl = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
+      errorEl.style.display = 'none';
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        errorEl.textContent = 'Username dan password harus diisi.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '⏳ Memverifikasi...';
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          btn.innerHTML = '✅ Berhasil!';
+          setTimeout(() => {
+            window.location.href = data.redirect;
+          }, 400);
+        } else {
+          errorEl.textContent = data.error || 'Login gagal.';
+          errorEl.style.display = 'block';
+          btn.disabled = false;
+          btn.innerHTML = '🔐 Masuk';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Gagal terhubung ke server.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = '🔐 Masuk';
+      }
+    }
+  </script>
+</body>
+</html>

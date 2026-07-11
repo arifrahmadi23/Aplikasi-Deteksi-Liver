@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiverScope AI — Deteksi Histopatologi Liver</title>
+  <meta name="description"
+    content="Sistem deteksi histopatologi liver otomatis menggunakan pipeline hybrid AI: YOLOv11, ResNet50, dan XGBoost.">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css?v=5">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+  <!-- Mobile sidebar toggle -->
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <div class="app-wrapper">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">🔬</span>
+        <h2>LiverScope AI</h2>
+        <div class="brand-sub">Hybrid Detection System</div>
+      </div>
+
+      <!-- User info -->
+      <div class="sidebar-user" id="sidebar-user">
+        <div class="user-avatar" id="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Admin</div>
+          <div class="user-role" id="user-role">Administrator</div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">📌 Menu Admin</div>
+        <a href="/admin/patients" class="nav-link">
+          <span class="nav-icon">👥</span> Data Pasien
+        </a>
+        <a href="/admin/detect" class="nav-link active">
+          <span class="nav-icon">🔍</span> Deteksi Baru
+        </a>
+        <a href="/admin/history" class="nav-link">
+          <span class="nav-icon">📚</span> Riwayat Analisis
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">⚙️ Akun</div>
+        <a href="/logout" class="nav-link logout-link">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </div>
+
+      <div class="sidebar-footer">© 2026 LiverScope AI v2.0</div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+      <!-- Hero Header -->
+      <div class="hero-header">
+        <h1><span class="hero-icon">🔬</span>Deteksi Histopatologi Liver</h1>
+        <p class="hero-subtitle">Analisis otomatis citra histopatologi menggunakan pipeline hybrid AI</p>
+        <div class="hero-badge">YOLOv11 &nbsp;•&nbsp; ResNet50 &nbsp;•&nbsp; XGBoost</div>
+      </div>
+
+      <!-- Patient Selector -->
+      <h2 class="section-title"><span class="section-icon">👤</span> Pilih Pasien</h2>
+      <div class="patient-selector">
+        <label for="patient-select">Pasien yang akan dianalisis <span style="color: var(--error);">*</span></label>
+        <select id="patient-select">
+          <option value="">— Pilih pasien —</option>
+        </select>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Belum ada data pasien? <a href="/admin/patients">Tambahkan pasien baru</a>
+        </p>
+      </div>
+
+      <!-- Upload Section -->
+      <h2 class="section-title"><span class="section-icon">📤</span> Unggah Citra Histopatologi</h2>
+
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.tiff,.tif,.bmp">
+        <span class="upload-icon">🔬</span>
+        <h4>Unggah Citra Histopatologi</h4>
+        <p>Seret & lepas gambar histopatologi liver, atau klik untuk memilih file.</p>
+        <div class="upload-formats">Format: JPG, PNG, TIFF, BMP</div>
+      </div>
+
+      <div id="file-preview-area"></div>
+
+      <div style="margin-top: 1rem; text-align: center;">
+        <button class="btn btn-primary btn-block" id="detect-btn" onclick="runDetection()"
+          style="display:none; max-width:500px; margin: 0 auto;">
+          🔍 Mulai Deteksi
+        </button>
+      </div>
+
+      <!-- ==================== RESULTS ==================== -->
+      <div id="results-section" style="display: none; margin-top: 2rem;">
+
+        <!-- Metrics -->
+        <h2 class="section-title"><span class="section-icon">📊</span> Ringkasan Hasil</h2>
+        <div class="metrics-grid stagger" id="metrics-grid"></div>
+
+        <!-- Save -->
+        <div id="save-section" style="display:none; margin-bottom: 1.5rem;">
+          <button class="btn btn-success btn-block" id="save-btn" onclick="saveToDatabase()"
+            style="max-width:500px; margin: 0 auto;">
+            💾 Simpan ke Database
+          </button>
+        </div>
+
+        <!-- Image Comparison -->
+        <div id="comparison-section" style="display: none;">
+          <h2 class="section-title"><span class="section-icon">🖼️</span> Hasil Deteksi Visual <span
+              class="filter-badge" id="filter-badge"></span></h2>
+
+          <!-- XGBoost Confidence Filter -->
+          <div class="inline-conf-slider" id="inline-conf-section" style="display: none; margin-bottom: 1.25rem;">
+            <div class="inline-conf-header">
+              <span class="inline-conf-icon">📊</span>
+              <label>XGBoost Confidence Filter</label>
+              <span class="slider-value" id="conf-value">0.10</span>
+            </div>
+            <input type="range" id="conf-slider" min="0.00" max="0.95" step="0.05" value="0.10">
+            <div class="inline-conf-hint">
+              <span>0.00 (semua)</span>
+              <span id="conf-redetect-hint" style="display:none;">🔄 Geser untuk filter real-time</span>
+              <span>0.95 (ketat)</span>
+            </div>
+          </div>
+
+          <div class="comparison-grid">
+            <div class="comparison-panel">
+              <div class="comparison-label">📷 Gambar Asli</div>
+              <img id="original-image" src="" alt="Original">
+            </div>
+            <div class="comparison-panel">
+              <div class="comparison-label">🔍 Hasil Deteksi (filtered)</div>
+              <canvas id="annotated-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail Tabs -->
+        <div id="tabs-section" style="display: none; margin-top: 1.5rem;">
+          <h2 class="section-title"><span class="section-icon">📋</span> Detail Analisis</h2>
+          <div class="tabs-container">
+            <div class="tabs-nav">
+              <button class="tab-btn active" data-tab="tab-chart">📊 Distribusi Kelas</button>
+              <button class="tab-btn" data-tab="tab-table">📄 Tabel Detail</button>
+              <button class="tab-btn" data-tab="tab-crops">🔎 Region Terdeteksi</button>
+            </div>
+
+            <!-- Tab: Distribution Chart -->
+            <div class="tab-panel active" id="tab-chart">
+              <div style="display: grid; grid-template-columns: 3fr 2fr; gap: 1.25rem;">
+                <div class="chart-container" style="height: 330px;">
+                  <canvas id="distribution-chart"></canvas>
+                </div>
+                <div>
+                  <h4 style="color: var(--accent-primary); font-size: 0.88rem; margin-bottom: 0.65rem;">📝 Keterangan
+                    Klinis</h4>
+                  <div id="clinical-info"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab: Data Table -->
+            <div class="tab-panel" id="tab-table">
+              <div class="data-table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Kelas (YOLO)</th>
+                      <th>Conf YOLO</th>
+                      <th>Kelas (XGBoost)</th>
+                      <th>Conf XGBoost</th>
+                      <th>Lokasi</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="detections-tbody"></tbody>
+                </table>
+              </div>
+              <div style="margin-top: 0.85rem; text-align: right;">
+                <button class="btn btn-outline btn-sm" onclick="downloadCSV()">📥 Unduh CSV</button>
+              </div>
+            </div>
+
+            <!-- Tab: Crop Gallery -->
+            <div class="tab-panel" id="tab-crops">
+              <p style="color: var(--text-muted); margin-bottom: 0.85rem; font-size: 0.82rem;">
+                Setiap region yang terdeteksi oleh YOLO dan diklasifikasikan oleh XGBoost:
+              </p>
+              <div class="crop-grid" id="crops-grid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== HOW IT WORKS ==================== -->
+      <div id="how-section" style="margin-top: 2rem;">
+        <h2 class="section-title"><span class="section-icon">❓</span> Cara Kerja Sistem</h2>
+        <div class="how-it-works">
+          <div class="how-card">
+            <div class="how-num">1</div>
+            <h4>Deteksi Objek</h4>
+            <p>YOLOv11 mendeteksi region of interest (ROI) pada citra histopatologi dan menghasilkan bounding box.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-num">2</div>
+            <h4>Ekstraksi Fitur</h4>
+            <p>Setiap ROI di-crop dan diproses oleh ResNet50 untuk mengekstrak 2048 fitur visual tingkat tinggi.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-num">3</div>
+            <h4>Klasifikasi Akhir</h4>
+            <p>XGBoost mengklasifikasikan setiap region ke dalam 4 kategori: Ballooning, Fibrosis, Inflammation,
+              Steatosis.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== LOADING OVERLAY ==================== -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">🔍 Menjalankan Pipeline Deteksi</div>
+    <div class="progress-steps">
+      <div class="progress-step" id="step-yolo">
+        <div class="step-indicator">1</div>
+        <span>YOLOv11 — Mendeteksi region...</span>
+      </div>
+      <div class="progress-step" id="step-resnet">
+        <div class="step-indicator">2</div>
+        <span>ResNet50 — Mengekstrak fitur...</span>
+      </div>
+      <div class="progress-step" id="step-xgboost">
+        <div class="step-indicator">3</div>
+        <span>XGBoost — Mengklasifikasikan...</span>
+      </div>
+      <div class="progress-step" id="step-render">
+        <div class="step-indicator">4</div>
+        <span>Merender hasil visualisasi...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js?v=5"></script>
+</body>
+
+</html>
