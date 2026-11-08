@@ -169,9 +169,26 @@ function initUpload() {
 }
 
 function handleFile(file) {
+  // Validate file type (MIME + extension)
   const validTypes = ['image/jpeg', 'image/png', 'image/tiff', 'image/bmp'];
-  if (!validTypes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|tiff|tif|bmp)$/i)) {
-    Toast.show('Format file tidak didukung! Gunakan JPG, PNG, TIFF, atau BMP.', 'error');
+  const validExts = /\.(jpg|jpeg|png|tiff|tif|bmp)$/i;
+  const isValidMime = validTypes.includes(file.type);
+  const isValidExt = validExts.test(file.name);
+
+  if (!isValidMime && !isValidExt) {
+    Toast.show('Format file tidak didukung! Hanya file gambar (JPG, PNG, TIFF, BMP) yang diperbolehkan.', 'error', 5000);
+    // Reset input so the same file can be re-selected after correction
+    const input = document.getElementById('file-input');
+    if (input) input.value = '';
+    return;
+  }
+
+  // Validate file size (max 50MB)
+  const MAX_SIZE = 50 * 1024 * 1024;
+  if (file.size > MAX_SIZE) {
+    Toast.show('Ukuran file terlalu besar! Maksimal 50MB.', 'error', 5000);
+    const input = document.getElementById('file-input');
+    if (input) input.value = '';
     return;
   }
 
